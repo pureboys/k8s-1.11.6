@@ -1,97 +1,88 @@
-# K8s 1.11.6 配置
+# K8s 1.13.1 配置
 
 ### Master/Node:
 
-1. wget https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo -O /etc/yum.repos.d/
-2. vim /etc/yum.repos.d/kubernetes.repo
-
+1. cd  /etc/yum.repos.d/ && wget https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+2. 
 ```
+cat <<EOF > /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
-baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/
-gpgcheck=0
-gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64
 enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+EOF
 ```
+3. yum install -y --setopt=obsoletes=0 docker-ce-17.03.1.ce-1.el7.centos kubelet kubeadm kubectl
+4. systemctl enable docker kubelet && systemctl start docker
+5. swapoff -a
+6. 
+```
+cat <<EOF >  /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+vm.swappiness=0
+EOF
 
-3. yum install --setopt=obsoletes=0 docker-ce-17.03.1.ce-1.el7.centos
-4. yum install kubelet-1.11.6  kubeadm-1.11.6  kubectl-1.11.6
-5. systemctl enable docker kubelet
-6. systemctl start docker
-7. /etc/sysconfig/kubelet
+sysctl --system
 
-```
-KUBELET_EXTRA_ARGS="--fail-swap-on=false"
-```
-8. 确保为1
-```
 [root@k8s-manager labs]# cat /proc/sys/net/bridge/bridge-nf-call-iptables
 1
 [root@k8s-manager labs]# cat /proc/sys/net/bridge/bridge-nf-call-ip6tables
 1
 ```
 
-9. 下载镜像
-./pull_k8s_images.sh
-
-10. 
-```
- kubeadm init --kubernetes-version=v1.11.6  --apiserver-advertise-address=192.168.205.50 --pod-network-cidr=10.244.0.0/16 servicecidr=10.96.0.0/12 --ignore-preflight-errors=Swap
-```
-11.
-```
- mkdir -p $HOME/.kube
- sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
- sudo chown $(id -u):$(id -g) $HOME/.kube/config
-```
-
-12. 添加加flannel网络附件
-```
-kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kubeflannel.yml
-```
-
-13. 验正master节点已经就绪
-```
-# kubectl get nodes
-```
-
-
-### Nodes:
-
-
-1. wget https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo -O /etc/yum.repos.d/
-2. vim /etc/yum.repos.d/kubernetes.repo
+7. vi /etc/sysconfig/kubelet
 
 ```
-[kubernetes]
-name=Kubernetes
-baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/
-gpgcheck=0
-gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
-enabled=1
+KUBELET_EXTRA_ARGS="--node-ip={YOUR_IP}"
 ```
 
-3. yum install --setopt=obsoletes=0 docker-ce-17.03.1.ce-1.el7.centos
-4. yum install kubelet-1.11.6  kubeadm-1.11.6  kubectl-1.11.6
-5. systemctl enable docker kubelet
-6. systemctl start docker
-7. /etc/sysconfig/kubelet
+8. 
+```
+ kubeadm init --kubernetes-version=v1.13.1  --apiserver-advertise-address=11.11.11.111 --pod-network-cidr=10.244.0.0/16 servicecidr=10.96.0.0/12 --image-repository=registry.aliyuncs.com/google_containers
+```
+9. 
+```
+mkdir -p $HOME/.kube
+cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+```
+10. 添加加flannel网络附件
+```
+wget https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+
+# 如果Node有多个网卡的话，参考flannel issues 39701，
+# https://github.com/kubernetes/kubernetes/issues/39701
+# 目前需要在kube-flannel.yml中使用--iface参数指定集群主机内网网卡的名称，
+# 否则可能会出现dns无法解析。容器无法通信的情况，需要将kube-flannel.yml下载到本地，
+# flanneld启动参数加上--iface=<iface-name>
+    containers:
+      - name: kube-flannel
+        image: quay.io/coreos/flannel
+        command:
+        - /opt/bin/flanneld
+        args:
+        - --ip-masq
+        - --kube-subnet-mgr
+        - --iface=enp0s8
+
+# 启动
+kubectl apply -f kube-flannel.yml
+
+# 查看
+kubectl get pods --namespace kube-system
+kubectl get svc --namespace kube-system
 
 ```
-KUBELET_EXTRA_ARGS="--fail-swap-on=false"
-```
-8. 确保为1
-```
-[root@k8s-manager labs]# cat /proc/sys/net/bridge/bridge-nf-call-iptables
-1
-[root@k8s-manager labs]# cat /proc/sys/net/bridge/bridge-nf-call-ip6tables
-1
-```
 
-9. 下载镜像
-./pull_k8s_images.sh
+11.  docker save $(docker images | sed '1d' | awk '{print $1 ":" $2 }') -o k8s.tar.gz
 
-10. 加入网络
-```
- kubeadm join 192.168.205.50:6443 --token syk7vu.cjt65h4kpuobtgvf --discovery-token-ca-cert-hash sha256:82addd9d45a114dbbf00721e3e72990cb2bc0f750898ee28691120aabe3d14dc --ignore-preflight-errors=Swap
-``` 
+
+### Node:
+
+1. 执行 1-7 步骤后
+2. kubeadm join 11.11.11.111:6443 --token n546cq.2b6og68bc4753rhi --discovery-token-ca-cert-hash sha256:073320ca3ea5447fe93d9f52b09f2c1480a3d83528feb82b32e9450dc53d50a1
+
+3. 执行 docker load -i k8s.tar.gz
