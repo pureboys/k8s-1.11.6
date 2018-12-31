@@ -17,7 +17,7 @@ EOF
 ```
 3. yum install -y --setopt=obsoletes=0 docker-ce-17.03.1.ce-1.el7.centos kubelet kubeadm kubectl
 4. systemctl enable docker kubelet && systemctl start docker
-5. swapoff -a
+5. swapoff -a  # 临时关闭swap, 永久关闭 注释/etc/fstab文件里swap相关的行
 6. 
 ```
 cat <<EOF >  /etc/sysctl.d/k8s.conf
