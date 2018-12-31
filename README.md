@@ -83,6 +83,7 @@ kubectl get svc --namespace kube-system
 ### Node:
 
 1. 执行 1-7 步骤后
-2. kubeadm join 11.11.11.111:6443 --token n546cq.2b6og68bc4753rhi --discovery-token-ca-cert-hash sha256:073320ca3ea5447fe93d9f52b09f2c1480a3d83528feb82b32e9450dc53d50a1
+2. 执行 docker load -i k8s.tar.gz
+3. kubeadm join 11.11.11.111:6443 --token n546cq.2b6og68bc4753rhi --discovery-token-ca-cert-hash sha256:073320ca3ea5447fe93d9f52b09f2c1480a3d83528feb82b32e9450dc53d50a1
 
-3. 执行 docker load -i k8s.tar.gz
+
