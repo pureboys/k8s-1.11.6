@@ -87,3 +87,9 @@ kubectl get svc --namespace kube-system
 3. kubeadm join 11.11.11.111:6443 --token n546cq.2b6og68bc4753rhi --discovery-token-ca-cert-hash sha256:073320ca3ea5447fe93d9f52b09f2c1480a3d83528feb82b32e9450dc53d50a1
 
 
+### issue
+1. 有时候join失败, 肯能是防火墙没有关
+```
+systemctl disable firewalld
+systemctl stop firewalld
+```
