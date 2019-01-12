@@ -93,3 +93,14 @@ kubectl get svc --namespace kube-system
 systemctl disable firewalld
 systemctl stop firewalld
 ```
+
+2. 有时候拉资源非常的慢直接替换成镜像网址的域名
+
+```
+下拉镜像：quay.io/coreos/flannel:v0.10.0-s390x
+如果拉取较慢，可以改为：quay-mirror.qiniu.com/coreos/flannel:v0.10.0-s390x
+或者quay.mirrors.ustc.edu.cn镜像
+
+下拉镜像：gcr.io/google_containers/kube-proxy
+可以改为： registry.aliyuncs.com/google_containers/kube-proxy
+```
