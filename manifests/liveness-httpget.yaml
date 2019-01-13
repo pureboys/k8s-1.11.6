@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: liveness-httpget-pod
+  namespace: default
+spec:
+  containers:
+    - name: liveness-httpget-container
+      image: ikubernetes/myapp:v1
+      imagePullPolicy: IfNotPresent
+      ports:
+        - name: http
+          containerPort: 80
+      livenessProbe: # 存活探针检测,不存活默认重启
+        httpGet:
+          port: http
+          path: /index.html
+        initialDelaySeconds: 1 # 启动后1s执行
+        periodSeconds: 3 # 间隔时间为3s探测一次
+
+  # restartPolicy:         

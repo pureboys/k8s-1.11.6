@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: poststart-pod
+  namespace: default
+spec:
+  containers:
+    - name: busybox-httpd
+      image: busybox:latest
+      imagePullPolicy: IfNotPresent
+      lifecycle:
+        postStart:
+          exec:
+            command: ["/bin/sh", "-c", "echo Home Page > /tmp/index.html"]
+      command: ["/bin/sh", "-c", "/bin/httpd -f -h /tmp"] # 此command 优先 postStart.exec.command
+      #command: ["/bin/sh", "-c", "sleep 3600"]
