@@ -10,7 +10,7 @@ spec:
     server: 11.11.11.114
   accessModes: ["ReadWriteMany","ReadWriteOnce"]
   capacity:
-    storage: 2Gi
+    storage: 5Gi
 ---
 
 apiVersion: v1
@@ -41,7 +41,7 @@ spec:
     server: 11.11.11.114
   accessModes: ["ReadWriteMany","ReadWriteOnce"]
   capacity:
-    storage: 20Gi
+    storage: 5Gi
 
 ---
 

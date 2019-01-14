@@ -11,6 +11,7 @@ vim /etc/exports
 
 /data/volumes   11.11.11.0/24(rw,no_root_squash)
 
+systemctl enable nfs
 systemctl start nfs
 
 ss -tnl (2049端口)
