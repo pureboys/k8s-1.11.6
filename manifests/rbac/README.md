@@ -2,6 +2,7 @@
 
 1. kubectl proxy --port=8080 在master主机上代理
 2. curl http://172.20.0.70:6443/apis/apps/v1/namespaces/default/deployments/myapp-deploy/
+3. k8s 上的权限可以分为User用户对api访问的权限和内部pods（serviceaccount）对api访问的权限。
 
 ### serviceaccount
 
@@ -25,3 +26,9 @@
 kubectl config set-cluster mycluster --kubeconfig=/tmp/test.conf --server="https://11.11.11.111:6443" --certificate-authority=/etc/kubernetes/pki/ca.crt --embed-certs=true
 12. kubectl config view --kubeconfig=/tmp/test.conf 进行查看
 
+### 创建role权限
+1. kubectl create role pods-reader --verb=get,list,watch --resource=pods --dry-run -o yaml
+2. kubectl apply -f role-demo.yaml 
+3. kubectl get role
+4. kubectl create rolebinding oliver-read-pods --role=pods-reader --user=oliver --dry-run -o yaml
+5. kubectl apply -f rolebinding-demo
