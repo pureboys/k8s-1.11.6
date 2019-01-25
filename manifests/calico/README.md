@@ -4,11 +4,13 @@
 ```
   docker pull quay-mirror.qiniu.com/calico/cni:v3.4.0
   docker pull quay-mirror.qiniu.com/calico/node:v3.4.0
+  docker pull quay-mirror.qiniu.com/coreos/flannel:v0.9.1
 
   docker tag quay-mirror.qiniu.com/calico/cni:v3.4.0 quay.io/calico/cni:v3.4.0
   docker tag quay-mirror.qiniu.com/calico/node:v3.4.0 quay.io/calico/node:v3.4.0
+  docker tag quay-mirror.qiniu.com/coreos/flannel:v0.9.1 quay.io/coreos/flannel:v0.9.1
 
-  docker save quay.io/calico/cni:v3.4.0 quay.io/calico/node:v3.4.0 -o calico.tar.gz
+  docker save quay.io/calico/cni:v3.4.0 quay.io/calico/node:v3.4.0 quay.io/coreos/flannel:v0.9.1  -o calico.tar.gz
   
   scp ...
 ```
