@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: schdule-pod-nodeaffinity-demo
+  labels:
+    app: myapp
+    tier: frontend
+spec:
+  containers:
+  - name: myapp
+    image: ikubernetes/myapp:v1
+  affinity:
+    nodeAffinity:
+      # 强制要求，筛选如果没有 key=zone value=foo,bar 筛选标签，则pod处于pending状态
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: zone
+            operator: In
+            values:
+            - foo
+            - bar
+
