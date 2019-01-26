@@ -1,0 +1,12 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all-ingress
+spec:
+  podSelector: {}
+  # 如果加上下面的表示允许所有其他pod去访问该pod
+  # ingress:
+  # - {}
+  policyTypes:
+  - Ingress # 定义了但是没有写规则，说明没有符合条件的规则，也就是禁止所有规则生效， 但是没有写engress。说明默认egress没有制定规则。也就是默认都生效的。
+
