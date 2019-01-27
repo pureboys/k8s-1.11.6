@@ -103,5 +103,11 @@ systemctl stop firewalld
 
 下拉镜像：k8s.gcr.io/kube-proxy
 可以改为： registry.aliyuncs.com/google_containers/kube-proxy
-如果没有也可以上 dockerhub 看下用户 mirrorgooglecontainers 制作的镜像，下载下来之后重新打上tag标签
+```
+3. 每个node的节点的hosts配置正确
+```
+# /etc/hosts
+11.11.11.111 k8s-master
+11.11.11.112 k8s-node1
+11.11.11.113 k8s-node2
 ```
