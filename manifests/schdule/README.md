@@ -22,3 +22,28 @@
 2. kubectl label nodes k8s-node2 zone=foo
 3. kubectl apply -f schdule-pod-podantiaffinity-demo.yaml
 4. kubectl get pods -o wide (node2 被pending)
+
+#### 管理节点的污点
+1. kubectl taint node k8s-node1 node-type=production:NoSchedule # 打上污点
+2. kubectl apply -f ../deploy-demo.yaml  #所有的pod会落到k8s-node2 因为不能容忍污点
+3. kubectl taint node  k8s-node2 node-type=dev:NoExecute # 现在都不能为容忍了
+4. kubectl apply -f taint-demo.yaml # 建一个可以容忍污点的pod
+5. kubectl get pods -o wide # 查看一下
+
+##### 注解1
+```
+- key: "node-type"
+  perator: "Exists"
+  value: ""
+  effect: "NoSchedule"
+```
++ 如果 perator 为 Exists， 只要存在污点的key为node-type就能容忍匹配上。 然后根据effect值判断。 并且节点上的effect要与pod中的effect完全匹配， effect 为空则表示匹配所有节点的effect
+
+##### 注解2
+```
+- key: "node-type"
+  perator: "Equal"
+  value: "production"
+  effect: "NoSchedule"
+```
++ 如果 perator 为 Equal，则要容忍匹配上污点key为node-type，值为production的节点。然后根据effect值判断。 并且节点上的effect要与pod中的effect完全匹配， effect 为空则表示匹配所有节点的effect
