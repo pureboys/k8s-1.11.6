@@ -101,6 +101,7 @@ systemctl stop firewalld
 如果拉取较慢，可以改为：quay-mirror.qiniu.com/coreos/flannel:v0.10.0-s390x
 或者quay.mirrors.ustc.edu.cn镜像
 
-下拉镜像：gcr.io/google_containers/kube-proxy
+下拉镜像：k8s.gcr.io/kube-proxy
 可以改为： registry.aliyuncs.com/google_containers/kube-proxy
+如果没有也可以上 dockerhub 看下用户 mirrorgooglecontainers 制作的镜像，下载下来之后重新打上tag标签
 ```
