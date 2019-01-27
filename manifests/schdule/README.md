@@ -29,6 +29,8 @@
 3. kubectl taint node  k8s-node2 node-type=dev:NoExecute # 现在都不能为容忍了
 4. kubectl apply -f taint-demo.yaml # 建一个可以容忍污点的pod
 5. kubectl get pods -o wide # 查看一下
+6. 删除污点: kubectl taint node k8s-node1 node-type-
+7. kubectl taint node k8s-node2 node-type-
 
 ##### 注解1
 ```
