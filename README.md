@@ -15,7 +15,7 @@ repo_gpgcheck=1
 gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
 EOF
 ```
-3. yum install -y --setopt=obsoletes=0 docker-ce-17.03.1.ce-1.el7.centos kubelet kubeadm kubectl # 如果更新了版本，需要加上版本号
+3. yum install -y --setopt=obsoletes=0 docker-ce-17.03.1.ce-1.el7.centos kubelet-1.13.1 kubeadm-1.13.1 kubectl-1.13.1
 4. systemctl enable docker kubelet && systemctl start docker
 5. swapoff -a  # 临时关闭swap, 永久关闭 注释/etc/fstab文件里swap相关的行
 6. 
