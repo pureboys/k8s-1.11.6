@@ -111,3 +111,10 @@ systemctl stop firewalld
 11.11.11.112 k8s-node1
 11.11.11.113 k8s-node2
 ```
+4. 每个加点加上中国镜像加速
+/etc/docker/daemon.json
+```
+{
+  "registry-mirrors": ["https://registry.docker-cn.com"]
+}
+```
