@@ -71,3 +71,27 @@ spec:
 5.  kubectl  apply -f grafana.yaml 
 6.  kubectl get svc -n kube-system
 7.  外部直接访问 不需要https
+
+
+### HPA 水平Pod横向扩展1
+1. 手动创建一个 deployment:
+kubectl run myapp --image=ikubernetes/myapp:v1 --replicas=1 --requests='cpu=50m,memory=256Mi' --limits='cpu=50m,memory=256Mi' --labels='app=myapp' --expose --port=80
+2. kubectl get pods
+3. kubectl autoscale deployment myapp --min=1 --max=8 --cpu-percent=60
+4. kubectl get hpa
+5. kubectl patch svc myapp -p '{"spec":{"type":"NodePort"}}'
+6. kubectl get svc
+7. 本地发起压测  ab -c 100 -n 500000 http://11.11.11.111:31199/index.html
+8. kubectl describe hpa 可以看效果是否pod横向扩展
+
+### HPA 水平Pod横向扩展2
+1. kubectl delete hpa myapp
+2. kubectl apply -f hpa-v2-demo.yaml
+3. kubectl get hpa
+4. 本地发起压测  ab -c 100 -n 500000 http://11.11.11.111:31199/index.html
+5. kubectl describe hpa
+
+### HPA 水平Pod横向扩展3（未测试）
+1. 创建一个 https://hub.docker.com/r/ikubernetes/metrics-app 镜像的deployment
+2. kubectl apply -f hpa-v2-custom.yaml
+3. 发起压力测试后，查看hpa的情况
