@@ -31,7 +31,7 @@
 ```
 6. kubectl apply -f .
 7. kubectl get all -n prom
-8. 访问　http://11.11.11.112:30090/　可以看到其中的界面
+8. 访问　http://11.11.11.112:30090/ 可以看到其中的界面
 
 ### 部署 kube-state-metrics
 1.  cd ../kube-state-metrics/
