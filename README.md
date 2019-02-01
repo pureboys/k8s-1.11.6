@@ -103,6 +103,7 @@ systemctl stop firewalld
 
 下拉镜像：k8s.gcr.io/kube-proxy
 可以改为： registry.aliyuncs.com/google_containers/kube-proxy
+也可以试一下: gcr.akscn.io/google_containers/pause-amd64:3.1
 ```
 3. 每个node的节点的hosts配置正确
 ```
